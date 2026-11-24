@@ -1,0 +1,7 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.sql
+!database/schema.sql
+.DS_Store
