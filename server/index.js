@@ -7,8 +7,9 @@ const seed = require('./seed');
 const app = express();
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(path.join(__dirname, '../public')));
-app.get('/admin', (req,res) => res.sendFile(path.join(__dirname, '../admin/index.html')));
-app.use('/admin-assets', express.static(path.join(__dirname, '../admin')));
+app.get('/admin', (req, res) => res.redirect(301, '/admin/'));
+app.use('/admin', express.static(path.join(__dirname, '../admin'), { index: 'index.html' }));
+app.use('/admin-assets', express.static(path.join(__dirname, '../admin'))); // Backward-compatible asset path
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
@@ -346,9 +347,8 @@ initialize().then(() => {
   });
 
 }).catch(error => {
-  console.error(
-    'Database initialization failed. Run database/schema.sql and check .env:',
-    error.message
-  );
+  console.error('Database initialization failed. Run database/schema.sql and check .env:');
+  console.error(error);
+  if (error && error.code) console.error('Database error code:', error.code);
   process.exit(1);
 });

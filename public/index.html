@@ -10,7 +10,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/png" href="C:\Users\DHRUBAJYOTI ROY\Desktop\PROJECT\DBMS Project\test2\logo.png">
+
 </head>
 
 <body>
@@ -133,9 +135,10 @@
             <p>Enter your details to place your order.</p>
             <form id="checkoutForm"><label>Full name<input name="customer" placeholder="Your full name" required
                         minlength="2" maxlength="120"></label><label>Phone number<input name="phone" type="tel"
-                        placeholder="Your contact number" required pattern="[0-9+()\s-]{8,18}"></label><label>Delivery
-                    address<textarea name="address" placeholder="House number, street, landmark..." required
-                        minlength="8" maxlength="500"></textarea></label>
+                        placeholder="Your contact number" required
+                        pattern="[0-9+\(\)\s\-]{8,18}"></label><label>Delivery address<textarea name="address"
+                        placeholder="House number, street, landmark..." required minlength="8"
+                        maxlength="500"></textarea></label>
                 <div class="modal-total">Order total <b id="checkoutTotal">₹0</b></div><button class="checkout-btn"
                     type="submit">Place Order →</button>
                 <p class="form-error" id="formError"></p>
