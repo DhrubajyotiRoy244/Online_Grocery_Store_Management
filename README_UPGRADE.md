@@ -1,30 +1,47 @@
-# Maa Bhagwati General Store — Customer Accounts + Order Tracking + Categories
+# Customer Accounts, Order Tracking, and Categories
 
-## What's new
-- Customer registration, sign-in and profile editing (name, email, phone, default address)
-- My Orders: order history, items, status progress (New → Processing → Shipped → On the way → Delivered), refreshed every 15 seconds while the panel is open
-- Admin: order status controls, new category management tab (add and delete empty categories)
-- Existing guest orders can be linked from My Orders using their order number and checkout phone number (development convenience, not strong identity verification)
-- Product images from HTTPS URLs display in storefront (emoji fallback for products without an image)
+This document describes the customer account and order-tracking update for an existing Maa Bhagwati General Store installation.
 
-## Upgrade an existing installation WITHOUT deleting MySQL data
-1. **Back up your database** before making changes:
-   `mysqldump -u root -p maa_bhagwati_store > maa_bhagwati_backup.sql`
-2. Stop your Node server (Ctrl+C). MySQL should stay running.
-3. Copy `public/`, `admin/`, `server/index.js`, and `README_UPGRADE.md` from this package into the original project. **Keep the existing `.env` file**, MySQL database, and existing `node_modules` if present. `server/seed.js` is unchanged.
-4. Ensure `.env` still has DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, PORT, ADMIN_PASSWORD, ADMIN_SESSION_SECRET from the previous admin version.
-5. In the project folder run `npm install` and then `npm start`.
-6. The server automatically adds `customers`, `categories`, and a nullable `orders.customer_id` column to the existing MySQL database. **Do not drop or recreate the database.** Existing orders and products are preserved.
-7. Customer site: http://localhost:3000 — click **My Account** to register, **My Orders** to see status, **My Profile** to edit details.
-8. Admin: http://localhost:3000/admin — change order status under Customer orders; add categories under Categories, then assign products to them.
+## Upgrade an existing installation without deleting MySQL data
 
-## Fresh installation
-- Create/import tables with `mysql -u root -p < database/schema.sql`.
-- Configure `.env` based on `.env.example`, run `npm install` then `npm start`.
+1. Back up the database before making changes. For example:
+   ```bash
+   mysqldump -u root -p maa_bhagwati_store > maa_bhagwati_backup.sql
+   ```
+2. Stop the Node.js server with `Ctrl+C`. MySQL should remain running.
+3. Back up the project folder, then copy the updated `public/`, `admin/`, and `server/index.js` files into the corresponding locations in your project. Keep your local `.env` file and existing MySQL database; do not replace them with files from another computer.
+4. Check that your own `.env` contains `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `PORT`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET`. If you are setting up a fresh copy instead, create `.env` from `.env.example` and follow [README.md](README.md).
+5. Install dependencies on the computer where the application will run:
+   ```bash
+   npm install
+   ```
+   The `node_modules` directory is generated locally from `package-lock.json` and should not be copied into the project ZIP or committed to Git.
+6. Run the application:
+   ```bash
+   npm start
+   ```
+7. The server adds the `customers` and `categories` tables and a nullable `orders.customer_id` column when needed. Existing products and orders are preserved. Do not drop or recreate the database during an upgrade.
 
-## Notes
-- **Previously placed guest orders are not automatically shown** in new accounts. Use the 'Link order' form in My Orders with order ID and checkout phone. For a public production site, replace this with phone OTP or another strong ownership verification method.
-- Customer orders placed **after signing in** are automatically linked to that account. Checkout requires sign-in.
-- Status is updated by the admin; the customer view polls every 15 seconds while open. It is *not* GPS location tracking or courier integration.
-- Login sessions are in server memory, so they are cleared on backend restart. Users must sign in again. For production use persistent session storage, HTTPS, CSRF protections, email/phone verification, stronger rate limiting, and a dedicated restricted MySQL user.
-- Product/category changes are saved to the same MySQL database. Existing orders are not deleted.
+## Features included
+
+- Customer registration, sign-in, and profile editing (name, email, phone, and default address).
+- Order history, line items, and order-status progress (New → Processing → Shipped → On the way → Delivered).
+- Customer order status refreshes every 15 seconds while the My Orders panel is open.
+- Admin order-status controls and category management.
+- Existing guest orders can be linked from My Orders using the order number and checkout phone number. This is a development convenience, not strong identity verification.
+- Product images from HTTPS URLs display in the storefront, with an emoji fallback when no image is set.
+
+## URLs
+
+- Customer storefront: `http://localhost:3000`
+- Customer account and order history: use **My Account** and **My Orders** in the storefront.
+- Admin dashboard: `http://localhost:3000/admin`
+
+## Notes and limitations
+
+- Previously placed guest orders are not automatically shown in new accounts. The **Link order** form in My Orders uses the order ID and checkout phone number. For a public production site, replace this with phone OTP or another strong ownership-verification method.
+- Orders placed after a customer signs in are linked to that account. Checkout requires sign-in.
+- The admin updates order status manually. Customer status refresh is not GPS tracking or courier integration.
+- Login sessions are stored in server memory and are cleared when the backend restarts, so users must sign in again.
+- For production use, add persistent session storage, HTTPS, CSRF protections, email/phone verification, stronger rate limiting, and a dedicated restricted MySQL user.
+- Product and category changes are saved in the same MySQL database. Existing orders are not deleted.
