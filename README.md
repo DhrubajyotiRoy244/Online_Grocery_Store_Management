@@ -86,7 +86,7 @@ npm start
 Open these addresses in your browser:
 
 - Storefront: <http://localhost:3000>
-- Admin dashboard: <http://localhost:3000/admin>
+- Admin dashboard: <http://localhost:3000/admin/index.html>
 
 If you changed `PORT` in `.env`, replace `3000` in the addresses with your configured port.
 
