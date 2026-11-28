@@ -22,6 +22,11 @@ Extract the project ZIP (or clone the repository), open a terminal in the projec
 
 Run this command from the project folder:
 
+Windows PowerShell (VS Code):
+```bash
+cmd /c "mysql -u root -p < database/schema.sql"
+```
+Windows CMD / macOS / Linux:
 ```bash
 mysql -u root -p < database/schema.sql
 ```
